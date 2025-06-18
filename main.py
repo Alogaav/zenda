@@ -138,20 +138,17 @@ st.sidebar.markdown("## ⚙️ Solicitar Crédito")
 
 # Selector de país para simular
 selected_country = st.sidebar.selectbox(
-    "Simular usuario de:",
+    "Pais: ",
     [f"{data['country']} ({data['currency']})" for data in get_sample_data()]
 )
 edad = st.sidebar.text_input(
     "Edad:"
 )
 antiguedad = st.sidebar.text_input(
-    "Antigüedad:"
+    "Antigüedad bancaria en años:"
 )
 balance = st.sidebar.text_input(
     "Balance:"
-)
-productos = st.sidebar.text_input(
-    "Productos contratados:"
 )
 promedio = st.sidebar.text_input(
     "Balance promedio:"
@@ -203,7 +200,7 @@ if hasattr(st.session_state, 'start_simulation') and st.session_state.start_simu
         user_data["edad"] = edad
         user_data["antiguedad"] = antiguedad
         user_data["balance"] = float(balance)
-        user_data["productos"] = productos
+        user_data["productos"] = 1
         user_data["balance_promedio"] = float(promedio)
         
         st.success("✅ ¡Documentos procesados exitosamente!")
@@ -218,8 +215,7 @@ if hasattr(st.session_state, 'start_simulation') and st.session_state.start_simu
             st.metric("Edad", user_data["edad"])
         
         with info_col2:
-            st.metric("Productos Contratados", user_data["productos"])
-            st.metric("Antigüedad Cuenta", f"{user_data['antiguedad']} meses")
+            st.metric("Antigüedad Cuenta", f"{user_data['antiguedad']} años")
         
         with info_col3:
             st.metric("Balance actual", format_currency(user_data["balance"], user_data["currency"]))
