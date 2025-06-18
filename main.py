@@ -285,28 +285,29 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Sidebar con métricas del sistema
-st.sidebar.markdown("## 📊 Métricas del Sistema")
-
-# Métricas en tiempo real (simuladas)
-total_applications = 1247 + random.randint(0, 10)
-approval_rate = round(73 + random.random() * 4, 1)
-avg_processing_time = round(1.8 + random.random() * 0.4, 2)
-accuracy_rate = round(89 + random.random() * 3, 1)
-
-st.sidebar.metric("Aplicaciones Totales", total_applications, delta="+5")
-st.sidebar.metric("Tasa de Aprobación", f"{approval_rate}%", delta="+2.1%")
-st.sidebar.metric("Tiempo Promedio", f"{avg_processing_time}s", delta="-0.2s")
-st.sidebar.metric("Precisión del Modelo", f"{accuracy_rate}%", delta="+1.2%")
-
-st.sidebar.markdown("---")
-st.sidebar.markdown("## ⚙️ Configuración")
+st.sidebar.markdown("## ⚙️ Solicitar Crédito")
 
 # Selector de país para simular
 selected_country = st.sidebar.selectbox(
     "Simular usuario de:",
     ["🎲 Aleatorio"] + [f"{data['country']} ({data['currency']})" for data in get_sample_data()]
 )
+edad = st.sidebar.text_input(
+    "Edad:"
+)
+antiguedad = st.sidebar.text_input(
+    "Antigüedad:"
+)
+balance = st.sidebar.text_input(
+    "Balance:"
+)
+productos = st.sidebar.text_input(
+    "Productos contratados:"
+)
+promedio = st.sidebar.text_input(
+    "Balance promedio:"
+)
+
 
 # Botón principal para iniciar simulación
 if st.sidebar.button("🚀 Iniciar Simulación", type="primary", use_container_width=True):
