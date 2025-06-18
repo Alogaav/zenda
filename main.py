@@ -312,16 +312,16 @@ if hasattr(st.session_state, 'start_simulation') and st.session_state.start_simu
         info_col1, info_col2, info_col3 = st.columns(3)
         
         with info_col1:
-            st.metric("País", user_data["country"])
-            st.metric("Banco", user_data["bank_name"])
+            st.metric("Moneda", user_data["currency"])
+            st.metric("Edad", user_data["bank_name"])
         
         with info_col2:
-            st.metric("Moneda", user_data["currency"])
+            st.metric("Productos Contratados", user_data["currency"])
             st.metric("Antigüedad Cuenta", f"{user_data['account_age_months']} meses")
         
         with info_col3:
-            st.metric("Ingresos Promedio", format_currency(user_data["avg_income"], user_data["currency"]))
-            st.metric("Transacciones Sospechosas", user_data["anomalous_transactions"])
+            st.metric("Balance actual", 1000)
+            st.metric("Balance promedio", user_data["anomalous_transactions"])
         
         
         with st.spinner("🧠 Calculando score crediticio..."):
