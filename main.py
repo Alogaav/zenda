@@ -25,8 +25,8 @@ X = scaler.transform(X)
 y = df_filtrado["CreditoOtorgado"]
 
 # Separamos el set de datos para entrenar y probar los modelos
-X_train, X_test = X[:5000], X[5000:]
-y_train, y_test = y[:5000], y[5000:]
+X_train, X_test = X[:1500], X[5000:]
+y_train, y_test = y[:1500], y[5000:]
 
 
 random_forest = RandomForestClassifier(n_estimators=100).fit(X_train, y_train)
