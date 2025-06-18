@@ -25,11 +25,11 @@ X = scaler.transform(X)
 y = df_filtrado["CreditoOtorgado"]
 
 # Separamos el set de datos para entrenar y probar los modelos
-X_train, X_test = X[:1500], X[5000:]
-y_train, y_test = y[:1500], y[5000:]
+X_train = X[:500]
+y_train = y[:500]
 
 
-random_forest = RandomForestClassifier(n_estimators=100).fit(X_train, y_train)
+random_forest = RandomForestClassifier(n_estimators=20).fit(X_train, y_train)
 # Configuración de la página
 st.set_page_config(
     page_title="Zenda PoC - Sistema de Scoring Crediticio Alternativo",
@@ -103,15 +103,15 @@ def get_sample_data():
 
 def calculate_credit_score(data):
     # "Edad","Antigüedad","Balance","ProductosContratados","BalancePromedio"
-    y_pred = random_forest.predict([
+    y_pred = random_forest.predict([[
         data["edad"],
         data["antiguedad"],
         data["balance"],
         data["productos"],
         data["balance_promedio"]
-    ])
+    ]])
     
-    approved = y_pred
+    approved = y_pred[0]
     return {
         "approved": approved,
         "factors": "",
