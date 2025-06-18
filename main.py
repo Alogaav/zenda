@@ -323,16 +323,10 @@ if hasattr(st.session_state, 'start_simulation') and st.session_state.start_simu
             st.metric("Ingresos Promedio", format_currency(user_data["avg_income"], user_data["currency"]))
             st.metric("Transacciones Sospechosas", user_data["anomalous_transactions"])
         
-        # Paso 2: Análisis de riesgo
-        st.markdown("### 🎯 Paso 2: Análisis de Riesgo")
         
         with st.spinner("🧠 Calculando score crediticio..."):
             time.sleep(1.5)
         
-        # Calcular score
-        scoring_result = calculate_credit_score(user_data)
-        
-        st.session_state.scoring_result = scoring_result
         st.session_state.user_data = user_data
 
 with col2:
@@ -364,41 +358,6 @@ with col2:
             <div class="success-box">
                 <h3 style="text-align: center; margin: 0;">💳 Límite de Crédito Propuesto</h3>
                 <h2 style="text-align: center; margin: 10px 0; color: #28a745;">€{result["credit_limit"]:,}</h2>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        # Factores de decisión
-        st.markdown("### 📋 Factores de Decisión")
-        
-        for factor in result["factors"]:
-            icon = "✅" if factor["positive"] else "❌"
-            color = "#28a745" if factor["positive"] else "#dc3545"
-            
-            st.markdown(f"""
-            <div style="display: flex; justify-content: space-between; align-items: center; 
-                        padding: 10px; margin: 5px 0; background-color: #f8f9fa; border-radius: 5px;">
-                <span>{icon} {factor["factor"]}</span>
-                <span style="color: {color}; font-weight: bold;">
-                    {'+' if factor["impact"] > 0 else ''}{factor["impact"]:.0f} pts
-                </span>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        # Alertas y warnings
-        if data["anomalous_transactions"] > 2:
-            st.markdown(f"""
-            <div class="warning-box">
-                <h4>⚠️ Alerta de Seguridad</h4>
-                <p>Se detectaron <strong>{data["anomalous_transactions"]} transacciones anómalas</strong>. 
-                Se requiere revisión manual adicional.</p>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        if data["risk_country"]:
-            st.markdown("""
-            <div class="warning-box">
-                <h4>⚠️ País de Alto Riesgo</h4>
-                <p>El país de origen está clasificado como de alto riesgo. Se aplicaron penalizaciones en el scoring.</p>
             </div>
             """, unsafe_allow_html=True)
     
