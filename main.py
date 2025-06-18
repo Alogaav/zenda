@@ -10,7 +10,26 @@ import random
 from PIL import Image
 import io
 import base64
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
 
+# Cargar dataset simulado
+df = pd.read_excel("customer_records.xlsx")
+df_filtrado = df[["Edad","Antigüedad","Balance","ProductosContratados","BalancePromedio","CreditoOtorgado"]]
+scaler = StandardScaler()
+
+X = df_filtrado[["Edad","Antigüedad","Balance","ProductosContratados","BalancePromedio"]]
+scaler.fit(X)
+X = scaler.transform(X)
+y = df_filtrado["CreditoOtorgado"]
+
+# Separamos el set de datos para entrenar y probar los modelos
+X_train, X_test = X[:5000], X[5000:]
+y_train, y_test = y[:5000], y[5000:]
+
+
+random_forest = RandomForestClassifier(n_estimators=100).fit(X_train, y_train)
 # Configuración de la página
 st.set_page_config(
     page_title="Zenda PoC - Sistema de Scoring Crediticio Alternativo",
@@ -70,9 +89,9 @@ st.markdown("""
 def get_sample_data():
     return [
         {
-            "country": "México", 
-            "currency": "MXN",
-            "bank_name": "BBVA México",
+            "country": "Cualquiera", 
+            "currency": "EUR",
+            "bank_name": "BBVA",
             "balance": 38000,
             "balance_promedio": 28000,
             "anomalous_transactions": 0,
@@ -83,7 +102,16 @@ def get_sample_data():
     ]
 
 def calculate_credit_score(data):
-    approved = True
+    # "Edad","Antigüedad","Balance","ProductosContratados","BalancePromedio"
+    y_pred = random_forest.predict([
+        data["edad"],
+        data["antiguedad"],
+        data["balance"],
+        data["productos"],
+        data["balance_promedio"]
+    ])
+    
+    approved = y_pred
     return {
         "approved": approved,
         "factors": "",
@@ -95,11 +123,6 @@ def calculate_credit_score(data):
 def format_currency(amount, currency):
     """Formatea moneda según el país"""
     symbols = {
-        "COP": "$",
-        "MXN": "$", 
-        "ARS": "$",
-        "BRL": "R$",
-        "PEN": "S/",
         "EUR": "€"
     }
     symbol = symbols.get(currency, "$")
