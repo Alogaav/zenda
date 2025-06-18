@@ -70,144 +70,25 @@ st.markdown("""
 def get_sample_data():
     return [
         {
-            "country": "Colombia",
-            "currency": "COP",
-            "bank_name": "Banco de Bogotá",
-            "balances": [2500000, 2200000, 1800000],
-            "avg_income": 1500000,
-            "anomalous_transactions": 1,
-            "risk_country": False,
-            "income_stability": 0.85,
-            "account_age_months": 24
-        },
-        {
             "country": "México", 
             "currency": "MXN",
             "bank_name": "BBVA México",
-            "balances": [45000, 42000, 38000],
-            "avg_income": 28000,
+            "balance": 38000,
+            "balance_promedio": 28000,
             "anomalous_transactions": 0,
             "risk_country": False,
             "income_stability": 0.92,
             "account_age_months": 18
-        },
-        {
-            "country": "Argentina",
-            "currency": "ARS",
-            "bank_name": "Banco Santander",
-            "balances": [850000, 720000, 650000],
-            "avg_income": 480000,
-            "anomalous_transactions": 3,
-            "risk_country": True,
-            "income_stability": 0.65,
-            "account_age_months": 12
-        },
-        {
-            "country": "Brasil",
-            "currency": "BRL",
-            "bank_name": "Itaú Unibanco",
-            "balances": [8500, 9200, 8800],
-            "avg_income": 5500,
-            "anomalous_transactions": 0,
-            "risk_country": False,
-            "income_stability": 0.88,
-            "account_age_months": 36
-        },
-        {
-            "country": "Perú",
-            "currency": "PEN",
-            "bank_name": "BCP",
-            "balances": [12000, 11500, 10800],
-            "avg_income": 3200,
-            "anomalous_transactions": 2,
-            "risk_country": False,
-            "income_stability": 0.75,
-            "account_age_months": 15
         }
     ]
 
 def calculate_credit_score(data):
-    """Calcula el score crediticio basado en múltiples factores"""
-    score = 500  # Score base
-    factors = []
-    
-    # Factor: Estabilidad de ingresos (0-200 puntos)
-    income_stability_score = data["income_stability"] * 200
-    score += income_stability_score
-    factors.append({
-        "factor": "Estabilidad de Ingresos",
-        "impact": round(income_stability_score, 2),
-        "positive": data["income_stability"] > 0.7
-    })
-    
-    # Factor: Tendencia de saldos (±50 puntos)
-    balance_trend = 30 if data["balances"][0] > data["balances"][-1] else -50
-    score += balance_trend
-    factors.append({
-        "factor": "Tendencia de Saldos",
-        "impact": balance_trend,
-        "positive": balance_trend > 0
-    })
-    
-    # Factor: Transacciones anómalas (±100 puntos)
-    anomaly_score = max(-100, -data["anomalous_transactions"] * 30)
-    score += anomaly_score
-    factors.append({
-        "factor": "Transacciones Sospechosas",
-        "impact": anomaly_score,
-        "positive": data["anomalous_transactions"] <= 1
-    })
-    
-    # Factor: Riesgo país (±40 puntos)
-    country_score = -40 if data["risk_country"] else 20
-    score += country_score
-    factors.append({
-        "factor": "Riesgo País",
-        "impact": country_score,
-        "positive": not data["risk_country"]
-    })
-    
-    # Factor: Capacidad de ahorro (±40 puntos)
-    avg_balance = sum(data["balances"]) / len(data["balances"])
-    if avg_balance > data["avg_income"] * 2:
-        ratio_score = 40
-    elif avg_balance > data["avg_income"]:
-        ratio_score = 20
-    else:
-        ratio_score = -20
-    score += ratio_score
-    factors.append({
-        "factor": "Capacidad de Ahorro",
-        "impact": ratio_score,
-        "positive": ratio_score > 0
-    })
-    
-    # Factor: Antigüedad de cuenta (±30 puntos)
-    age_score = min(30, data["account_age_months"] * 2)
-    score += age_score
-    factors.append({
-        "factor": "Antigüedad de Cuenta",
-        "impact": age_score,
-        "positive": data["account_age_months"] >= 12
-    })
-    
-    final_score = max(300, min(850, round(score)))
-    approved = final_score >= 600 and data["anomalous_transactions"] <= 2
-    
-    # Calcular límite de crédito
-    if approved:
-        base_limit = (final_score - 500) * 2
-        income_multiplier = min(data["avg_income"] * 0.3, 5000)  # Convertido a EUR aprox
-        credit_limit = round(base_limit + income_multiplier)
-    else:
-        credit_limit = 0
-    
     return {
-        "approved": approved,
-        "factors": factors,
+        "approved": True,
+        "factors": "",
         "recommendation": "APROBADO ✅" if approved else "RECHAZADO ❌",
         "confidence": round(85 + random.random() * 10, 1),
-        "credit_limit": credit_limit
+        "credit_limit": 2000
     }
 
 def format_currency(amount, currency):
@@ -320,8 +201,8 @@ if hasattr(st.session_state, 'start_simulation') and st.session_state.start_simu
             st.metric("Antigüedad Cuenta", f"{user_data['account_age_months']} meses")
         
         with info_col3:
-            st.metric("Balance actual", 1000)
-            st.metric("Balance promedio", user_data["anomalous_transactions"])
+            st.metric("Balance actual", format_currency(user_data["balance"], user_data["currency"]))
+            st.metric("Balance promedio", format_currency(user_data["balance_promedio"], user_data["currency"]))
         
         
         with st.spinner("🧠 Calculando score crediticio..."):
