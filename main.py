@@ -17,6 +17,7 @@ from sklearn.ensemble import RandomForestClassifier
 # Cargar dataset simulado
 df = pd.read_excel("customer_records.xlsx")
 scaler = StandardScaler()
+df_filtrado = df[["Edad","Antigüedad","Balance","ProductosContratados","BalancePromedio","CreditoOtorgado"]]
 X = df_filtrado[["Edad","Antigüedad","Balance","ProductosContratados","BalancePromedio"]]
 scaler.fit(X)
 
