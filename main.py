@@ -180,16 +180,13 @@ if hasattr(st.session_state, 'start_simulation') and st.session_state.start_simu
         
         # Seleccionar datos según la opción del usuario
         sample_data = get_sample_data()
-        if selected_country == "🎲 Aleatorio":
-            user_data = random.choice(sample_data)
-        else:
-            country_name = selected_country.split(" (")[0]
-            user_data = next(data for data in sample_data if data["country"] == country_name)
-            user_data["edad"] = edad
-            user_data["antiguedad"] = antiguedad
-            user_data["balance"] = balance
-            user_data["productos"] = productos
-            user_data["balance_promedio"] = promedio
+        country_name = selected_country.split(" (")[0]
+        user_data = next(data for data in sample_data if data["country"] == country_name)
+        user_data["edad"] = edad
+        user_data["antiguedad"] = antiguedad
+        user_data["balance"] = float(balance)
+        user_data["productos"] = productos
+        user_data["balance_promedio"] = float(promedio)
         
         st.success("✅ ¡Documentos procesados exitosamente!")
         
