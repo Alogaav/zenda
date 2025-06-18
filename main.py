@@ -83,8 +83,9 @@ def get_sample_data():
     ]
 
 def calculate_credit_score(data):
+    approved = True
     return {
-        "approved": True,
+        "approved": approved,
         "factors": "",
         "recommendation": "APROBADO ✅" if approved else "RECHAZADO ❌",
         "confidence": round(85 + random.random() * 10, 1),
