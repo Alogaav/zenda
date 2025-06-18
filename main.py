@@ -13,6 +13,7 @@ import base64
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
+import pickle
 
 # Cargar dataset simulado
 df = pd.read_excel("customer_records.xlsx")
