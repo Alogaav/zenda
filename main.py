@@ -16,20 +16,11 @@ from sklearn.ensemble import RandomForestClassifier
 
 # Cargar dataset simulado
 df = pd.read_excel("customer_records.xlsx")
-df_filtrado = df[["Edad","Antigüedad","Balance","ProductosContratados","BalancePromedio","CreditoOtorgado"]]
 scaler = StandardScaler()
-
 X = df_filtrado[["Edad","Antigüedad","Balance","ProductosContratados","BalancePromedio"]]
 scaler.fit(X)
-X = scaler.transform(X)
-y = df_filtrado["CreditoOtorgado"]
 
-# Separamos el set de datos para entrenar y probar los modelos
-X_train = X[:500]
-y_train = y[:500]
-
-
-random_forest = RandomForestClassifier(n_estimators=20).fit(X_train, y_train)
+random_forest = pickle.load(open("random_forest_model_mini.pkl", 'rb'))
 # Configuración de la página
 st.set_page_config(
     page_title="Zenda PoC - Sistema de Scoring Crediticio Alternativo",
@@ -103,13 +94,15 @@ def get_sample_data():
 
 def calculate_credit_score(data):
     # "Edad","Antigüedad","Balance","ProductosContratados","BalancePromedio"
-    y_pred = random_forest.predict([[
-        data["edad"],
-        data["antiguedad"],
-        data["balance"],
-        data["productos"],
-        data["balance_promedio"]
-    ]])
+    y_pred = random_forest.predict(
+        scaler.transform([[
+            data["edad"],
+            data["antiguedad"],
+            data["balance"],
+            data["productos"],
+            data["balance_promedio"]
+        ]])
+    )
     
     approved = y_pred[0]
     return {
