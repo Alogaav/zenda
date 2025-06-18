@@ -203,7 +203,6 @@ def calculate_credit_score(data):
         credit_limit = 0
     
     return {
-        "score": final_score,
         "approved": approved,
         "factors": factors,
         "recommendation": "APROBADO ✅" if approved else "RECHAZADO ❌",
@@ -224,57 +223,7 @@ def format_currency(amount, currency):
     symbol = symbols.get(currency, "$")
     return f"{symbol} {amount:,.0f}"
 
-def create_balance_chart(balances, currency):
-    """Crea gráfico de evolución de saldos"""
-    months = ["Mes 1", "Mes 2", "Mes 3"]
-    
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=months,
-        y=balances,
-        mode='lines+markers',
-        name='Saldo',
-        line=dict(color='#667eea', width=3),
-        marker=dict(size=10)
-    ))
-    
-    fig.update_layout(
-        title="Evolución de Saldos (Últimos 3 meses)",
-        xaxis_title="Período",
-        yaxis_title=f"Saldo ({currency})",
-        height=300,
-        showlegend=False
-    )
-    
-    return fig
 
-def create_score_gauge(score):
-    """Crea un gauge para mostrar el score"""
-    fig = go.Figure(go.Indicator(
-        mode = "gauge+number+delta",
-        value = score,
-        domain = {'x': [0, 1], 'y': [0, 1]},
-        title = {'text': "Credit Score"},
-        delta = {'reference': 600},
-        gauge = {
-            'axis': {'range': [None, 850]},
-            'bar': {'color': "darkblue"},
-            'steps': [
-                {'range': [300, 500], 'color': "lightgray"},
-                {'range': [500, 600], 'color': "yellow"},
-                {'range': [600, 700], 'color': "lightgreen"},
-                {'range': [700, 850], 'color': "green"}
-            ],
-            'threshold': {
-                'line': {'color': "red", 'width': 4},
-                'thickness': 0.75,
-                'value': 600
-            }
-        }
-    ))
-    
-    fig.update_layout(height=400)
-    return fig
 
 # Header principal
 st.markdown("""
@@ -374,9 +323,6 @@ if hasattr(st.session_state, 'start_simulation') and st.session_state.start_simu
             st.metric("Ingresos Promedio", format_currency(user_data["avg_income"], user_data["currency"]))
             st.metric("Transacciones Sospechosas", user_data["anomalous_transactions"])
         
-        # Gráfico de saldos
-        st.plotly_chart(create_balance_chart(user_data["balances"], user_data["currency"]), use_container_width=True)
-        
         # Paso 2: Análisis de riesgo
         st.markdown("### 🎯 Paso 2: Análisis de Riesgo")
         
@@ -411,9 +357,6 @@ with col2:
                 <p style="text-align: center; margin: 10px 0;">Confianza: {result["confidence"]}%</p>
             </div>
             """, unsafe_allow_html=True)
-        
-        # Gauge del score
-        st.plotly_chart(create_score_gauge(result["score"]), use_container_width=True)
         
         # Límite de crédito
         if result["approved"]:
