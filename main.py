@@ -327,7 +327,7 @@ if hasattr(st.session_state, 'start_simulation') and st.session_state.start_simu
         with st.spinner("🧠 Calculando score crediticio..."):
             time.sleep(1.5)
 
-        scoring_result = calculate_credit_score(user_data)Add commentMore actions
+        scoring_result = calculate_credit_score(user_data)
         
         st.session_state.scoring_result = scoring_result
         
